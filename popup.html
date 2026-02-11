@@ -20,7 +20,11 @@
         <button id="btn-restore-current" type="button">Restore Current</button>
       </div>
 
-      <pre id="output" aria-live="polite"></pre>
+      <label for="output">URLs JSON</label>
+      <textarea id="output" rows="8" readonly aria-live="polite"></textarea>
+      <div class="actions">
+        <button id="btn-copy" type="button">Copy</button>
+      </div>
     </main>
 
     <script src="popup.js"></script>

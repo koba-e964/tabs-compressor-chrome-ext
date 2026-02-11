@@ -1,12 +1,26 @@
 const output = document.getElementById("output");
 const jsonInput = document.getElementById("jsonInput");
+const copyButton = document.getElementById("btn-copy");
 
 function showResult(result) {
-  output.textContent = JSON.stringify(result, null, 2);
+  output.value = JSON.stringify(result, null, 2);
 }
 
 function showError(error) {
-  output.textContent = String(error?.message || error);
+  output.value = String(error?.message || error);
+}
+
+async function copyOutput() {
+  const text = output.value || "";
+  if (!text) {
+    showError("Nothing to copy.");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    showError("Clipboard write failed.");
+  }
 }
 
 document.getElementById("btn-specific").addEventListener("click", async () => {
@@ -15,6 +29,7 @@ document.getElementById("btn-specific").addEventListener("click", async () => {
       type: "GET_LAST_FOCUSED_URLS",
     });
     showResult(result);
+    await copyOutput();
   } catch (err) {
     showError(err);
   }
@@ -51,3 +66,7 @@ document
   .addEventListener("click", async () => {
     restoreUrls(undefined);
   });
+
+copyButton.addEventListener("click", async () => {
+  copyOutput();
+});

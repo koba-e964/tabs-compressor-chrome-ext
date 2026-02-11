@@ -62,7 +62,7 @@ async function restoreUrls(windowId) {
   }
 
   if (!payload || !Array.isArray(payload.urls)) {
-    showError("JSON must be in the form {\"urls\":[...] }");
+    showError('JSON must be in the form {"urls":[...] }');
     return;
   }
 

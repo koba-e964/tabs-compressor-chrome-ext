@@ -28,16 +28,16 @@ async function restoreWindowTabUrls(windowId, urls) {
   }
 
   const targetWindowId =
-    typeof windowId === "number"
-      ? windowId
-      : await getLastFocusedWindowId();
+    typeof windowId === "number" ? windowId : await getLastFocusedWindowId();
 
   if (typeof targetWindowId !== "number") {
     return { ok: false, error: "No target window found." };
   }
 
   await Promise.all(
-    sanitized.map((url) => chrome.tabs.create({ windowId: targetWindowId, url }))
+    sanitized.map((url) =>
+      chrome.tabs.create({ windowId: targetWindowId, url }),
+    ),
   );
 
   return { ok: true, count: sanitized.length };
@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg?.type === "RESTORE_WINDOW_URLS") {
     const { windowId, urls } = msg || {};
     restoreWindowTabUrls(windowId, Array.isArray(urls) ? urls : []).then(
-      sendResponse
+      sendResponse,
     );
     return true;
   }

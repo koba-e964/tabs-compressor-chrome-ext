@@ -1,6 +1,8 @@
 const output = document.getElementById("output");
 const jsonInput = document.getElementById("jsonInput");
 const copyButton = document.getElementById("btn-copy");
+const statusEl = document.getElementById("status");
+let statusTimer = null;
 
 function showResult(result) {
   output.value = JSON.stringify(result, null, 2);
@@ -8,6 +10,20 @@ function showResult(result) {
 
 function showError(error) {
   output.value = String(error?.message || error);
+}
+
+function showStatus(message, timeoutMs = 2500) {
+  if (!statusEl) {
+    return;
+  }
+  statusEl.textContent = message;
+  if (statusTimer) {
+    clearTimeout(statusTimer);
+  }
+  statusTimer = setTimeout(() => {
+    statusEl.textContent = "";
+    statusTimer = null;
+  }, timeoutMs);
 }
 
 async function copyOutput() {
@@ -18,6 +34,7 @@ async function copyOutput() {
   }
   try {
     await navigator.clipboard.writeText(text);
+    showStatus("クリップボードにコピーしました!");
   } catch (err) {
     showError("Clipboard write failed.");
   }

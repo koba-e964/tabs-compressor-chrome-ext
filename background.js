@@ -8,10 +8,17 @@ async function getWindowTabUrls(windowId) {
   return { urls: tabs.map((t) => t.url).filter(Boolean) };
 }
 
-async function getCurrentWindowTabUrls() {
-  const win = await chrome.windows.getCurrent();
-  const tabs = await chrome.tabs.query({ windowId: win.id });
-  return { urls: tabs.map((t) => t.url).filter(Boolean) };
+async function getLastFocusedWindowId() {
+  const win = await chrome.windows.getLastFocused({ windowTypes: ["normal"] });
+  return win?.id;
+}
+
+async function getLastFocusedWindowTabUrls() {
+  const windowId = await getLastFocusedWindowId();
+  if (typeof windowId !== "number") {
+    return { urls: [] };
+  }
+  return getWindowTabUrls(windowId);
 }
 
 async function restoreWindowTabUrls(windowId, urls) {
@@ -21,7 +28,13 @@ async function restoreWindowTabUrls(windowId, urls) {
   }
 
   const targetWindowId =
-    typeof windowId === "number" ? windowId : (await chrome.windows.getCurrent()).id;
+    typeof windowId === "number"
+      ? windowId
+      : await getLastFocusedWindowId();
+
+  if (typeof targetWindowId !== "number") {
+    return { ok: false, error: "No target window found." };
+  }
 
   await Promise.all(
     sanitized.map((url) => chrome.tabs.create({ windowId: targetWindowId, url }))
@@ -36,8 +49,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
-  if (msg?.type === "GET_CURRENT_WINDOW_URLS") {
-    getCurrentWindowTabUrls().then(sendResponse);
+  if (msg?.type === "GET_LAST_FOCUSED_URLS") {
+    getLastFocusedWindowTabUrls().then(sendResponse);
     return true;
   }
 

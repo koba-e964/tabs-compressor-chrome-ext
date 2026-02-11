@@ -1,5 +1,4 @@
 const output = document.getElementById("output");
-const windowIdInput = document.getElementById("windowId");
 const jsonInput = document.getElementById("jsonInput");
 
 function showResult(result) {
@@ -10,34 +9,10 @@ function showError(error) {
   output.textContent = String(error?.message || error);
 }
 
-chrome.windows.getCurrent().then((win) => {
-  if (win?.id != null) {
-    windowIdInput.value = String(win.id);
-  }
-});
-
-document.getElementById("btn-current").addEventListener("click", async () => {
-  try {
-    const result = await chrome.runtime.sendMessage({
-      type: "GET_CURRENT_WINDOW_URLS",
-    });
-    showResult(result);
-  } catch (err) {
-    showError(err);
-  }
-});
-
 document.getElementById("btn-specific").addEventListener("click", async () => {
   try {
-    const value = windowIdInput.value.trim();
-    if (!value) {
-      showError("Window ID is required for this button.");
-      return;
-    }
-
     const result = await chrome.runtime.sendMessage({
-      type: "GET_WINDOW_URLS",
-      windowId: Number(value),
+      type: "GET_LAST_FOCUSED_URLS",
     });
     showResult(result);
   } catch (err) {
@@ -75,15 +50,4 @@ document
   .getElementById("btn-restore-current")
   .addEventListener("click", async () => {
     restoreUrls(undefined);
-  });
-
-document
-  .getElementById("btn-restore-specific")
-  .addEventListener("click", async () => {
-    const value = windowIdInput.value.trim();
-    if (!value) {
-      showError("Window ID is required for this button.");
-      return;
-    }
-    restoreUrls(Number(value));
   });

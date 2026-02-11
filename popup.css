@@ -22,15 +22,6 @@ label {
   margin-bottom: 6px;
 }
 
-input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid #c9c3bb;
-  background: #fff;
-}
-
 textarea {
   width: 100%;
   box-sizing: border-box;

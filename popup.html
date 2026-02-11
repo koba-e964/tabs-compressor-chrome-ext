@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Window Tabs JSON</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Window Tabs JSON</h1>
+
+      <label for="windowId">Window ID (optional)</label>
+      <input id="windowId" type="number" placeholder="e.g. 123" />
+
+      <div class="actions">
+        <button id="btn-current" type="button">Get Current Window</button>
+        <button id="btn-specific" type="button">Get Window ID</button>
+      </div>
+
+      <pre id="output" aria-live="polite"></pre>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

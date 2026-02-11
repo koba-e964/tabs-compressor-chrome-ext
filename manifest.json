@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Window Tabs to JSON",
+  "version": "1.0.0",
+  "description": "Get all tab URLs for a specific window as JSON.",
+  "permissions": ["tabs", "windows"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Window Tabs JSON"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
